@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import cors from "cors";  // Import CORS middleware
 import authRoute from "./routes/auth.js";
 import usersRoute from "./routes/users.js";
 import roomsRoute from "./routes/rooms.js";
@@ -28,6 +29,12 @@ mongoose.connection.on("connected", () => {
 });
 
 // Middleware
+app.use(cors({ 
+  origin: "http://localhost:3000", // Allow frontend origin
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true 
+}));
+
 app.use(express.json());
 
 // Routes
