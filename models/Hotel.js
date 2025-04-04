@@ -1,72 +1,19 @@
-import mongoose from 'mongoose';
-const { Schema } = mongoose;
+import mongoose from "mongoose";
 
 const HotelSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    type: {
-        type: String,
-        required: true,
-    },
-    city: {
-        type: String,
-        required: true,
-    },
-    address: {
-        type: String,
-        required: true,
-    },
-    distance: {
-        type: String,
-        required: true,
-    },
-    photos: {
-        type: [String],
-    },
-    title: {
-        type: String,
-        required: true
-    },
-    desc: {
-        type: String,
-        required: true
-    },
-    rating: {
-        type: Number,
-        min: 0,
-        max: 5,
-    },
-    rooms: {
-        type: [String],
-    },
-    cheapestPrice: {
-        type: Number,
-        required: true,
-    },
-    featured: {
-        type: Boolean,
-        default: false,
-    },
-    propertyImages: {
-        type: [String],
-    },
-    propertySize: {
-        type: Number,
-    },
-    propertyDetails: {
-        type: String,
-    },
-    location: {
-        type: {
-            lat: Number,
-            lng: Number
-        },
-    },
-    pricePerNight: {
-        type: Number,
-    },
-});
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  countryCode: { type: String, required: true },
+  phone: { type: String, required: true },
+  hotelName: { type: String, required: true },
+  hotelType: { type: String, required: true },
+  city: { type: String, required: true },
+  distance: { type: String, required: true },
+  address: { type: String, required: true },
+  description: { type: String, required: true },
+  location: { type: String, required: true },
+  pricePerNight: { type: Number, required: true },
+  images: { type: [String], default: [] }, // Ensure images array exists
+}, { timestamps: true });
 
 export default mongoose.model("Hotel", HotelSchema);

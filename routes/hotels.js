@@ -1,27 +1,30 @@
 import express from "express";
-import Hotel from "../models/Hotel.js";
 import multer from "multer";
+import path from "path";
+import Hotel from "../models/Hotel.js";
 
 const router = express.Router();
 
-// Multer configuration for file uploads
+// Configure Multer for storing images in "uploads" folder
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Store images in the "uploads" folder
-  },
+  destination: "./uploads/",
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname); // Unique filename
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
 const upload = multer({ storage });
 
-// Create hotel with image upload
+// Create a hotel with image upload
 router.post("/", upload.array("images", 5), async (req, res) => {
-  const imagePaths = req.files ? req.files.map((file) => file.path) : [];
-  const newHotel = new Hotel({ ...req.body, propertyImages: imagePaths });
-
   try {
+    const imageUrls = req.files.map(file => `http://localhost:8800/uploads/${file.filename}`);
+
+    const newHotel = new Hotel({
+      ...req.body,
+      images: imageUrls, // Store image URLs instead of Base64
+    });
+
     const savedHotel = await newHotel.save();
     res.status(200).json(savedHotel);
   } catch (err) {
@@ -29,16 +32,22 @@ router.post("/", upload.array("images", 5), async (req, res) => {
   }
 });
 
-// Update hotel details with image upload
+// Update hotel
 router.put("/:id", upload.array("images", 5), async (req, res) => {
-  const imagePaths = req.files ? req.files.map((file) => file.path) : [];
-
   try {
+    let updatedData = { ...req.body };
+
+    // If new images are uploaded, update them
+    if (req.files && req.files.length > 0) {
+      updatedData.images = req.files.map(file => `http://localhost:8800/uploads/${file.filename}`);
+    }
+
     const updatedHotel = await Hotel.findByIdAndUpdate(
       req.params.id,
-      { $set: { ...req.body, propertyImages: imagePaths } },
+      { $set: updatedData },
       { new: true }
     );
+
     res.status(200).json(updatedHotel);
   } catch (err) {
     res.status(500).json(err);
@@ -74,5 +83,8 @@ router.get("/", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+// Serve uploaded images
+router.use("/uploads", express.static("uploads"));
 
 export default router;
