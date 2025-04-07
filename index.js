@@ -1,12 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-<<<<<<< HEAD
 import cors from "cors";
 import path from "path";
-=======
-import cors from "cors";  // Import CORS middleware
->>>>>>> e9b229a8cc6868d5a12cbdad7f56de267fe8740e
 import authRoute from "./routes/auth.js";
 import usersRoute from "./routes/users.js";
 import roomsRoute from "./routes/rooms.js";
@@ -34,24 +30,16 @@ mongoose.connection.on("connected", () => console.log("✅ MongoDB connected."))
 
 // Middleware
 app.use(cors({ 
-<<<<<<< HEAD
   origin: "http://localhost:3000", // Allow frontend requests
-=======
-  origin: "http://localhost:3000", // Allow frontend origin
->>>>>>> e9b229a8cc6868d5a12cbdad7f56de267fe8740e
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true 
 }));
 
-<<<<<<< HEAD
 app.use(express.json({ limit: "50mb" })); // ✅ Fix for PayloadTooLargeError
 app.use(express.urlencoded({ limit: "50mb", extended: true })); // ✅ Fix for large URL-encoded data
 
 // Serve uploaded images
 app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
-=======
-app.use(express.json());
->>>>>>> e9b229a8cc6868d5a12cbdad7f56de267fe8740e
 
 // Routes
 app.use("/api/auth", authRoute);
